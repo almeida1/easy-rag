@@ -5,7 +5,7 @@ import dev.langchain4j.service.SystemMessage;
 
 // O chatModel deve apontar para o nome do método @Bean na sua LangChainConfig
 
-@AiService(chatModel = "chatLanguageModel", contentRetriever = "contentRetriever")
+@AiService
 public interface Assistant {
 
     @SystemMessage({

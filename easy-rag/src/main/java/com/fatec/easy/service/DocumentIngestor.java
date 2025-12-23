@@ -19,7 +19,17 @@ public class DocumentIngestor {
     }
 
     public void ingestDocument(InputStream dataStream) {
-        // Nota: Certifique-se de que o parser é adequado ao tipo de arquivo
+        // o parser deve ser adequado ao tipo de arquivo
+        // para um arquivo PDF, o parser deve ser PDFDocumentParser
+        // para um arquivo Word, o parser deve ser WordDocumentParser
+        // para um arquivo CSV, o parser deve ser CSVDocumentParser
+        // para um arquivo JSON, o parser deve ser JSONDocumentParser
+        // para um arquivo XML, o parser deve ser XMLDocumentParser
+        // para um arquivo YAML, o parser deve ser YAMLDocumentParser
+        // para um arquivo HTML, o parser deve ser HTMLDocumentParser
+        // para um arquivo Markdown, o parser deve ser MarkdownDocumentParser
+        // para um arquivo Text, o parser deve ser TextDocumentParser
+        // podes-se passar o parser como parâmetro para o DocumentIngestor
         Document document = new TextDocumentParser().parse(dataStream);
         ingestor.ingest(document);
     }
