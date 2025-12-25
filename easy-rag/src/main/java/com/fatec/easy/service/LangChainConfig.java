@@ -70,6 +70,9 @@ public class LangChainConfig {
                 .build();
     }
 
+    // pode ser excluido quando o assistant for implementado com AiService
+    // aumenta a flexibilidade do assistant permite por exemplo configurar o
+    // chatMemory
     @Bean
     public Assistant assistant(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever) {
         return AiServices.builder(Assistant.class)
