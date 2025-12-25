@@ -1,6 +1,5 @@
 package com.fatec.easy.service;
 
-import dev.langchain4j.service.spring.AiService;
 import dev.langchain4j.service.SystemMessage;
 
 // O chatModel deve apontar para o nome do método @Bean na LangChainConfig
