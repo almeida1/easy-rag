@@ -60,34 +60,34 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Use the appropriate starter for your LLM provider (e.g., OpenAI) -->
+
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
-			<version>1.0.0-beta1</version> <!-- Use the latest version -->
-		</dependency>
-		<dependency>
-			<groupId>dev.langchain4j</groupId>
-			<artifactId>langchain4j-spring-boot-starter</artifactId>
 			<version>1.0.0-beta1</version>
-		</dependency>
-
-		<!-- Dependency for an in-memory vector store, good for simple examples -->
-		<dependency>
-			<groupId>dev.langchain4j</groupId>
-			<artifactId>langchain4j-easy-rag</artifactId>
-			<version>1.0.0-beta1</version> <!-- Use the latest version -->
 		</dependency>
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j</artifactId>
-			<version>1.0.0-beta1</version> <!-- Use the same version as your starter -->
+			<version>1.0.0-beta1</version>
 		</dependency>
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
-			<artifactId>langchain4j-embeddings-all-minilm-l6-v2</artifactId>
+			<artifactId>langchain4j-embeddings</artifactId>
 			<version>1.0.0-beta1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>dev.langchain4j</groupId>
+			<artifactId>langchain4j-document-parser-apache-tika</artifactId>
+			<version>1.0.0-beta1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

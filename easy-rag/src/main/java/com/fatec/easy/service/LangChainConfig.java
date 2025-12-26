@@ -1,17 +1,18 @@
 package com.fatec.easy.service;
 
+import com.fatec.easy.service.Assistant;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
-import dev.langchain4j.store.embedding.EmbeddingStore;
-import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
-import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.store.embedding.EmbeddingStore;
+import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
+import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,33 +21,50 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class LangChainConfig {
-    Logger logger = LogManager.getLogger(this.getClass());
+
+    private final Logger logger = LogManager.getLogger(this.getClass());
+
     @Value("${langchain4j.open-ai.chat-model.api-key}")
     private String apiKey;
 
     @Value("${langchain4j.open-ai.chat-model.model-name}")
-    private String modelName;
+    private String chatModelName;
 
     @Value("${langchain4j.open-ai.embedding-model.model-name}")
     private String embeddingModelName;
 
+    // 1. Configuração do Modelo de Chat (O que estava faltando)
     @Bean
-    public EmbeddingModel embeddingModel() {
-        logger.info(">>>>>> Configurando o modelo de embedding...");
-        return OpenAiEmbeddingModel.builder()
+    public ChatLanguageModel chatLanguageModel() {
+        logger.info(">>>>>> Configurando o modelo de chat: {}", chatModelName);
+        return OpenAiChatModel.builder()
                 .apiKey(apiKey)
-                .modelName(this.embeddingModelName)
+                .modelName(chatModelName)
+                .temperature(0.0) // Essencial para RAG: evita que a IA invente factos
                 .logRequests(true)
                 .logResponses(true)
                 .build();
     }
 
+    // 2. Configuração do Modelo de Embedding
+    @Bean
+    public EmbeddingModel embeddingModel() {
+        logger.info(">>>>>> Configurando o modelo de embedding: {}", embeddingModelName);
+        return OpenAiEmbeddingModel.builder()
+                .apiKey(apiKey)
+                .modelName(embeddingModelName)
+                .logRequests(true)
+                .logResponses(true)
+                .build();
+    }
+
+    // 3. Store em Memória
     @Bean
     public EmbeddingStore<TextSegment> embeddingStore() {
-        // Dados serão perdidos ao reiniciar o servidor
         return new InMemoryEmbeddingStore<>();
     }
 
+    // 4. Ingestor (Leva os documentos para a Store)
     @Bean
     public EmbeddingStoreIngestor embeddingStoreIngestor(EmbeddingModel embeddingModel,
             EmbeddingStore<TextSegment> embeddingStore) {
@@ -57,9 +75,9 @@ public class LangChainConfig {
                 .build();
     }
 
+    // 5. Retriever (Busca os documentos relevantes)
     @Bean
-    public ContentRetriever contentRetriever(
-            EmbeddingStore<TextSegment> embeddingStore,
+    public ContentRetriever contentRetriever(EmbeddingStore<TextSegment> embeddingStore,
             EmbeddingModel embeddingModel) {
         logger.info(">>>>> Configurando o retriever de conteúdo...");
         return EmbeddingStoreContentRetriever.builder()
@@ -70,15 +88,14 @@ public class LangChainConfig {
                 .build();
     }
 
-    // pode ser excluido quando o assistant for implementado com AiService
-    // aumenta a flexibilidade do assistant permite por exemplo configurar o
-    // chatMemory
+    // 6. O Assistente Final (Conecta Chat + RAG + Memória)
     @Bean
     public Assistant assistant(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever) {
+        logger.info(">>>>>> Configurando o Assistant com memória e retriever...");
         return AiServices.builder(Assistant.class)
                 .chatLanguageModel(chatLanguageModel)
                 .contentRetriever(contentRetriever)
-                .chatMemory(MessageWindowChatMemory.withMaxMessages(10)) // Mantém o contexto das últimas 10 mensagens
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 .build();
     }
 }
