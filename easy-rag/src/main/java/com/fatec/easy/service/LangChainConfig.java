@@ -1,6 +1,5 @@
 package com.fatec.easy.service;
 
-import com.fatec.easy.service.Assistant;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
@@ -33,7 +32,7 @@ public class LangChainConfig {
     @Value("${langchain4j.open-ai.embedding-model.model-name}")
     private String embeddingModelName;
 
-    // 1. Configuração do Modelo de Chat (O que estava faltando)
+    // 1. Configuração do Modelo de Chat 
     @Bean
     public ChatLanguageModel chatLanguageModel() {
         logger.info(">>>>>> Configurando o modelo de chat: {}", chatModelName);
@@ -88,7 +87,7 @@ public class LangChainConfig {
                 .build();
     }
 
-    // 6. O Assistente Final (Conecta Chat + RAG + Memória)
+    // 6. O Assistente configurado (Conecta Chat + RAG + Memória)
     @Bean
     public Assistant assistant(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever) {
         logger.info(">>>>>> Configurando o Assistant com memória e retriever...");
