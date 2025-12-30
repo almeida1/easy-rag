@@ -9,6 +9,10 @@ import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 
+/**
+ * Responsavel por processar e indexar os documentos para que eles possam ser
+ * posteriormente consultados pela IA
+ */
 @Service
 public class DocumentIngestor {
 
@@ -36,5 +40,7 @@ public class DocumentIngestor {
         logger.info(">>>>>> Indexacao dos documentos - Iniciando...");
         Document document = new TextDocumentParser().parse(dataStream);
         ingestor.ingest(document);
+        logger.info(">>>>>> Treinamento concluído. Documentos ingeridos: "
+                + document.text().length());
     }
 }
