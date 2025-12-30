@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/documents")
+@RequestMapping("/api")
 public class AssistantController {
 
     private final DocumentIngestor ingestor;
@@ -29,8 +29,8 @@ public class AssistantController {
         this.assistant = assistant;
     }
 
-    @PostMapping("/chat")
-    public ResponseEntity<String> chat(@RequestBody ChatRequest request) {
+    @PostMapping("/consultar")
+    public ResponseEntity<String> consultar(@RequestBody ChatRequest request) {
         String answer = assistant.chat(request.getQuestion());
         return ResponseEntity.ok(answer);
     }
