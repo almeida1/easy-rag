@@ -12,6 +12,8 @@ import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 /**
  * Responsavel por processar e indexar os documentos para que eles possam ser
  * posteriormente consultados pela IA
+ * documentos são ingeridos (TextDocumentParser), sem a adição de metadados
+ * explícitos (como nome do arquivo, data de upload, etc.) ao objeto
  */
 @Service
 public class DocumentIngestor {

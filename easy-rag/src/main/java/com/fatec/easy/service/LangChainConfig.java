@@ -32,7 +32,7 @@ public class LangChainConfig {
     @Value("${langchain4j.open-ai.embedding-model.model-name}")
     private String embeddingModelName;
 
-    // 1. Configuração do Modelo de Chat 
+    // 1. Configuração do Modelo de Chat
     @Bean
     public ChatLanguageModel chatLanguageModel() {
         logger.info(">>>>>> Configurando o modelo de chat: {}", chatModelName);
@@ -75,6 +75,11 @@ public class LangChainConfig {
     }
 
     // 5. Retriever (Busca os documentos relevantes)
+    /**
+     * utiliza vetores (embeddings) para encontrar os segmentos de texto mais
+     * similares semanticamente à pergunta do usuário,
+     * o que constitui a definição clássica de recuperação semântica
+     */
     @Bean
     public ContentRetriever contentRetriever(EmbeddingStore<TextSegment> embeddingStore,
             EmbeddingModel embeddingModel) {
@@ -88,6 +93,9 @@ public class LangChainConfig {
     }
 
     // 6. O Assistente configurado (Conecta Chat + RAG + Memória)
+    /**
+     * conecta o modelo de chat com o retriever de conteúdo e a memória do chat
+     */
     @Bean
     public Assistant assistant(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever) {
         logger.info(">>>>>> Configurando o Assistant com memória e retriever...");
